@@ -24,32 +24,6 @@ namespace WebScraperProject.Filehandling
 
         #region Public Get Methods
         /// <summary>
-        /// Gets a local asset from the local folder (This is used to store local data that was saved via <see cref="SaveLocalAsset{T}(object)"/>)
-        /// </summary>
-        /// <typeparam name="T">The type of the asset that is being retrieved (Used as the name for the .txt file)</typeparam>
-        /// <returns>The desired asset given by type</returns>
-        /// <exception cref="AssetNotFoundException"></exception>
-        /// <exception cref="AssetException"></exception>
-        public static T? GetLocalAsset<T>()
-        {
-            string path = $"{_baseFolderPath}\\Local\\{typeof(T)}.txt";
-            Logger.Log($"AssetPath: {path}");
-
-            if (!File.Exists(path))
-                throw new Exception("Asset not found: " + path);
-
-            try
-            {
-                string jsonString = File.ReadAllText(path);
-                return JsonHandler.Deserialize<T>(jsonString);
-            }
-            catch (Exception e)
-            {
-                Logger.Log(Logger.LogType.Error, $"Error while getting asset: {e.Message}");
-                throw new Exception(e.Message);
-            }
-        }
-        /// <summary>
         /// Gets a path to an asset via the asset name, uses recursion to find the asset (Will look through all dir under .../Assets)
         /// </summary>
         /// <param name="assetName">The name of the desired file</param>
@@ -90,25 +64,6 @@ namespace WebScraperProject.Filehandling
         #endregion
 
         #region Public Save Methods
-        /// <summary>
-        /// Saves an asset to the local folder (This is used to store local data that can be retrieved via <see cref="GetLocalAsset{T}"/>)
-        /// </summary>
-        /// <typeparam name="T">The type of the asset that is being saved (Used as the name for the .txt file)</typeparam>
-        /// <param name="o">The object that is to be saved as an asset</param>
-        /// <returns>The path for the saved asset</returns>
-        /// <exception cref="NullReferenceException"></exception>
-        public static string SaveLocalAsset<T>(T asset)
-        {
-            if (asset == null)
-                throw new NullReferenceException();
-
-            string path = $"{_baseFolderPath}\\Local\\{typeof(T)}.txt";
-            Logger.Log($"AssetPath: {path}");
-            string jsonString = JsonHandler.Serialize(asset);
-            File.WriteAllText(path, jsonString);
-            Logger.Log($"SaveAsset<{typeof(T)}> has been executed");
-            return path;
-        }
         /// <summary>
         /// 
         /// </summary>
